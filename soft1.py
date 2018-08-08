@@ -1,6 +1,7 @@
 import sqlite3
 from tkinter import *
 
+import utils
 
 #DATOS DE CONFIGURACION DE LA BASE DE DATOS 
 BDFILE = 'DB.sqlite'
@@ -8,40 +9,15 @@ TABLA = 'megatabla'
 CAMPO = 'texto_random'
 TIPO = 'VARCHAR(200)'  
 
-
-def crear_BD(fileName,tableName,campoName,typeName):
-	conn = sqlite3.connect(fileName)
-	c = conn.cursor()
-	try:
-		c.execute('CREATE TABLE {tn} ({nf} {ft})'.format(tn=tableName, nf=campoName, ft=typeName))
-	except:
-		None
-	conn.commit()
-	conn.close()
-
 def crearBD():
 	print("Creando BD")
 
-	crear_BD(BDFILE,TABLA,CAMPO,TIPO)
+	utils.crear_BD(BDFILE,TABLA,CAMPO,TIPO)
 
 	print("Base de datos Creada")
 	lbl5.configure(text="Base de Datos Creada!!")
 
 
-
-def leer_BD(fileName,tableName):
-
-	conn = sqlite3.connect(fileName)
-	c = conn.cursor()
-
-	c.execute('SELECT * FROM {tn}'.format(tn=tableName))
-
-	registros = c.fetchall()
-
-	conn.commit()
-	conn.close()
-
-	return registros
 
 
 def leerBD():
@@ -49,7 +25,7 @@ def leerBD():
 	print("reading DB")
 	lbl2.configure(text="reading DB")
 
-	registros=leer_BD(BDFILE,TABLA)
+	registros=utils.leer_BD(BDFILE,TABLA)
     
 	salida = ""
 	for i in registros:
@@ -59,17 +35,6 @@ def leerBD():
 	lbl2.configure(text=salida)
 	print(salida)
 
-	
-
-def escribir_DB(j,fileName,tableName,campoName):
-    
-	conn = sqlite3.connect(fileName)
-	c = conn.cursor()
-    
-	c.execute("INSERT INTO {tn} ({cn}) VALUES ('{txt}')".format(tn=tableName, cn=campoName, txt=j))
-
-	conn.commit()
-	conn.close()
 
 def escribirBD():
 	
@@ -77,7 +42,7 @@ def escribirBD():
 	print(text)
 	
 	try:
-		escribir_DB(text,BDFILE,TABLA,CAMPO)
+		utils.escribir_DB(text,BDFILE,TABLA,CAMPO)
 		lbl3.configure(text="Saved")
     
 	except sqlite3.IntegrityError:
@@ -95,13 +60,13 @@ if __name__ == '__main__':
 	window.title("EL6018 - Seminario de Proyecto")
 	window.geometry('640x480+200+200')
 
-	lbl5 = Label(window, text="Creación de Base de Datos:", font=("Raleway", 10)) 
+	lbl5 = Label(window, text="Creacion de Base de Datos:", font=("Raleway", 10)) 
 	lbl5.grid(row=1, column=0)
 
 	lbl = Label(window, text="Acceso Base de Datos", font=("Raleway", 25))
 	lbl.grid(row=0, column=0)
 
-	btn3 = Button(window, text="Creación", font=("Raleway", 10), command= crearBD)
+	btn3 = Button(window, text="Creacion", font=("Raleway", 10), command= crearBD)
 	btn3.grid(row=1, column=1)
 
 	btn = Button(window, text="Busqueda", font=("Raleway", 10), command= leerBD)
